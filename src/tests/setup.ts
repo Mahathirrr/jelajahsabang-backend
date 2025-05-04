@@ -83,10 +83,39 @@ vi.mock("../lib/supabase", () => ({
               data: { id: "test-id", status: "pending" },
               error: null,
             }),
+          order: () =>
+            Promise.resolve({
+              data: [
+                {
+                  id: "test-id",
+                  booking_number: "TEST-123",
+                  status: "pending",
+                  services: {
+                    name: "Test Service",
+                    service_providers: {
+                      company_name: "Test Provider",
+                    },
+                  },
+                },
+              ],
+              error: null,
+            }),
         }),
         order: () =>
           Promise.resolve({
-            data: [{ id: "test-id", status: "pending" }],
+            data: [
+              {
+                id: "test-id",
+                booking_number: "TEST-123",
+                status: "pending",
+                services: {
+                  name: "Test Service",
+                  service_providers: {
+                    company_name: "Test Provider",
+                  },
+                },
+              },
+            ],
             error: null,
           }),
       }),
