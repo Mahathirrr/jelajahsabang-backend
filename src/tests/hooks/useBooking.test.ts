@@ -20,6 +20,7 @@ describe("useBooking", () => {
       );
       expect(response.success).toBe(true);
       expect(response.booking).toBeDefined();
+      expect(response.booking.booking_number).toBe("TEST-123");
     });
   });
 
@@ -30,6 +31,7 @@ describe("useBooking", () => {
       const response = await result.current.getUserBookings("test-user-id");
       expect(response.success).toBe(true);
       expect(Array.isArray(response.bookings)).toBe(true);
+      expect(response.bookings.length).toBeGreaterThan(0);
     });
   });
 
@@ -40,6 +42,7 @@ describe("useBooking", () => {
       const response = await result.current.getBookingById("test-booking-id");
       expect(response.success).toBe(true);
       expect(response.booking).toBeDefined();
+      expect(response.booking.id).toBe("test-id");
     });
   });
 });

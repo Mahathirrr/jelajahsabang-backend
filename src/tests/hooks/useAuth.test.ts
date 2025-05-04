@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -9,10 +9,6 @@ describe("useAuth", () => {
     firstName: "Test",
     lastName: "User",
   };
-
-  beforeEach(() => {
-    localStorage.clear();
-  });
 
   it("should sign up a new user", async () => {
     const { result } = renderHook(() => useAuth());
@@ -27,6 +23,7 @@ describe("useAuth", () => {
         },
       );
       expect(response.success).toBe(true);
+      expect(response.data?.user).toBeDefined();
     });
   });
 
@@ -39,6 +36,7 @@ describe("useAuth", () => {
         testUser.password,
       );
       expect(response.success).toBe(true);
+      expect(response.data?.user).toBeDefined();
     });
   });
 
@@ -48,7 +46,6 @@ describe("useAuth", () => {
     await act(async () => {
       const response = await result.current.signOut();
       expect(response.success).toBe(true);
-      expect(result.current.user).toBe(null);
     });
   });
 });

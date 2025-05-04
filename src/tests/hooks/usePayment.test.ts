@@ -9,7 +9,7 @@ describe("usePayment", () => {
     await act(async () => {
       const response = await result.current.createPayment("test-booking-id");
       expect(response.success).toBe(true);
-      expect(response.payment_link).toBeDefined();
+      expect(response.payment_link).toBe("https://test-payment-link.com");
     });
   });
 
@@ -20,7 +20,7 @@ describe("usePayment", () => {
       const response =
         await result.current.checkPaymentStatus("test-payment-id");
       expect(response.success).toBe(true);
-      expect(response.payment.status).toBeDefined();
+      expect(response.payment.status).toBe("pending");
     });
   });
 });
