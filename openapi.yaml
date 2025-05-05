@@ -1,0 +1,700 @@
+openapi: 3.0.3
+info:
+  title: JelajahSabang API
+  description: |
+    API documentation for JelajahSabang tourism platform.
+
+    This API provides endpoints for managing destinations, services, bookings, and payments
+    in the JelajahSabang tourism platform.
+  version: 1.0.0
+  contact:
+    name: JelajahSabang Support
+    email: support@jelajahsabang.com
+servers:
+  - url: https://{project_id}.supabase.co
+    description: Supabase Project API
+    variables:
+      project_id:
+        description: Your Supabase project ID
+        default: your-project-id
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: string
+
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        first_name:
+          type: string
+        last_name:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [user, service_provider, admin]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Destination:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        short_description:
+          type: string
+        category_id:
+          type: string
+          format: uuid
+        address:
+          type: string
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        is_featured:
+          type: boolean
+        map_embed_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        category:
+          $ref: '#/components/schemas/Category'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/DestinationImage'
+
+    DestinationImage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        destination_id:
+          type: string
+          format: uuid
+        image_url:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+        is_primary:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    ServiceProvider:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        profile_id:
+          type: string
+          format: uuid
+        company_name:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        logo_url:
+          type: string
+          format: uri
+        is_verified:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Service:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        provider_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [accommodation, tour, transport, activity, food]
+        price:
+          type: number
+        price_unit:
+          type: string
+        duration:
+          type: string
+        max_capacity:
+          type: integer
+        is_available:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        provider:
+          $ref: '#/components/schemas/ServiceProvider'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceImage'
+
+    ServiceImage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        image_url:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+        is_primary:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        booking_number:
+          type: string
+        status:
+          type: string
+          enum: [pending, confirmed, cancelled, completed]
+        booking_date:
+          type: string
+          format: date
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        quantity:
+          type: integer
+        total_price:
+          type: number
+        special_requests:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        service:
+          $ref: '#/components/schemas/Service'
+
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        booking_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+        currency:
+          type: string
+        payment_method:
+          type: string
+        status:
+          type: string
+          enum: [pending, paid, failed, refunded]
+        xendit_invoice_id:
+          type: string
+        xendit_payment_id:
+          type: string
+        payment_link:
+          type: string
+          format: uri
+        expiry_date:
+          type: string
+          format: date-time
+        paid_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        destination_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        booking_id:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Favorite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        destination_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+
+paths:
+  /rest/v1/profiles:
+    get:
+      summary: Get user profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rest/v1/destinations:
+    get:
+      summary: List destinations
+      parameters:
+        - in: query
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: is_featured
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Destination'
+
+    post:
+      summary: Create destination
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Destination'
+      responses:
+        '201':
+          description: Destination created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Destination'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rest/v1/services:
+    get:
+      summary: List services
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [accommodation, tour, transport, activity, food]
+        - in: query
+          name: provider_id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+
+    post:
+      summary: Create service
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        '201':
+          description: Service created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /functions/v1/create-payment:
+    post:
+      summary: Create payment for booking
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bookingId
+              properties:
+                bookingId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  payment_id:
+                    type: string
+                    format: uuid
+                  payment_link:
+                    type: string
+                    format: uri
+                  xendit_invoice_id:
+                    type: string
+                  expiry_date:
+                    type: string
+                    format: date-time
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /functions/v1/check-payment-status:
+    get:
+      summary: Check payment status
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: payment_id
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: booking_id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Payment status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  payment:
+                    $ref: '#/components/schemas/Payment'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /functions/v1/webhook-xendit:
+    post:
+      summary: Handle Xendit payment webhook
+      parameters:
+        - in: header
+          name: X-Callback-Token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_type:
+                  type: string
+                data:
+                  type: object
+      responses:
+        '200':
+          description: Webhook processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          description: Invalid callback token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /functions/v1/send-notification:
+    post:
+      summary: Send notification
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bookingId
+                - type
+              properties:
+                bookingId:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+                  enum: [booking_confirmed, payment_received]
+      responses:
+        '200':
+          description: Notification sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /functions/v1/export-data:
+    post:
+      summary: Export data report
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - startDate
+                - endDate
+              properties:
+                type:
+                  type: string
+                  enum: [bookings, revenue]
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Data exported successfully
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
