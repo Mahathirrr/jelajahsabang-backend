@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Logo from '../ui/Logo';
-import Button from '../ui/Button';
 
 interface NavbarProps {
   transparent?: boolean;

@@ -7,9 +7,15 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import HomePage from './pages/HomePage';
+import Destinations from './pages/Destinations';
+import Culinary from './pages/Culinary';
+import Blogs from './pages/Blogs';
+import Contact from './pages/Contact';
+import Accommodations from './pages/Accommodations';
 
 // Components
 import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 
 // Protected Route Component
 interface ProtectedRouteProps {
@@ -18,7 +24,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -26,11 +32,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       </div>
     );
   }
-  
+
   if (!user) {
     return <Navigate to="/auth/login" />;
   }
-  
+
   return children;
 };
 
@@ -39,24 +45,69 @@ function App() {
     <Router>
       <Routes>
         {/* Public routes */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             <>
               <Navbar transparent={true} />
               <HomePage />
             </>
-          } 
+          }
         />
-        
+
+        <Route
+          path="/destinations"
+          element={
+            <>
+              <Destinations />
+            </>
+          }
+        />
+
+        <Route
+          path="/culinary"
+          element={
+            <>
+              <Culinary />
+            </>
+          }
+        />
+
+        <Route
+          path="/blog"
+          element={
+            <>
+              <Blogs />
+            </>
+          }
+        />
+
+        <Route
+          path="/contact"
+          element={
+            <>
+              <Contact />
+            </>
+          }
+        />
+
+        <Route
+          path="/accommodations"
+          element={
+            <>
+              <Accommodations />
+            </>
+          }
+        />
+
         {/* Auth routes */}
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-        
+
         {/* Protected routes */}
-        <Route 
-          path="/profile" 
+        <Route
+          path="/profile"
           element={
             <ProtectedRoute>
               <>
@@ -72,11 +123,11 @@ function App() {
                 </div>
               </>
             </ProtectedRoute>
-          } 
+          }
         />
-        
-        <Route 
-          path="/bookings" 
+
+        <Route
+          path="/bookings"
           element={
             <ProtectedRoute>
               <>
@@ -92,11 +143,11 @@ function App() {
                 </div>
               </>
             </ProtectedRoute>
-          } 
+          }
         />
-        
-        <Route 
-          path="/favorites" 
+
+        <Route
+          path="/favorites"
           element={
             <ProtectedRoute>
               <>
@@ -112,12 +163,12 @@ function App() {
                 </div>
               </>
             </ProtectedRoute>
-          } 
+          }
         />
-        
+
         {/* Catch all route */}
-        <Route 
-          path="*" 
+        <Route
+          path="*"
           element={
             <>
               <Navbar />
@@ -130,7 +181,7 @@ function App() {
                 </div>
               </div>
             </>
-          } 
+          }
         />
       </Routes>
     </Router>
